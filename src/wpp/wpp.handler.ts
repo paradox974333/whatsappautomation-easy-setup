@@ -126,6 +126,13 @@ export const handleIncomingMessage = async (message: wppconnect.Message): Promis
       body = `[Sent contact card(s): ${message.body ? message.body.substring(0, 100) : ''}]`;
     }
 
+    // Start composing/typing status immediately to simulate human reading/typing
+    const clientWrapper = WppClient.getInstance();
+    const client = clientWrapper.getClient();
+    if (client) {
+      client.startTyping(originalChatId).catch((e: any) => logger.debug(`Failed to start typing: ${e.message}`));
+    }
+
     // 5. Process through ChatService (Saves conversation, queries AI, captures leads if needed)
     const replyText = await chatService.processIncomingMessage(
       chatId,
@@ -138,10 +145,11 @@ export const handleIncomingMessage = async (message: wppconnect.Message): Promis
     );
 
     // 6. Send the generated response back via WhatsApp
-    const clientWrapper = WppClient.getInstance();
     if (clientWrapper.isConnected() && replyText) {
-      const client = clientWrapper.getClient();
       if (client) {
+        // Stop typing composing status
+        client.stopTyping(originalChatId).catch(() => {});
+        
         logger.info(`Sending AI reply to active thread: ${originalChatId}`);
         await client.sendText(originalChatId, replyText);
       } else {
