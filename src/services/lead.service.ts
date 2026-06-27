@@ -17,10 +17,24 @@ export class LeadService {
   public async createOrUpdateLead(phone: string, leadData: Partial<ILead>): Promise<ILead> {
     try {
       const cleanPhone = phone.replace(/\D/g, '');
-      const existingLead = await Lead.findOne({ phone: cleanPhone });
+      
+      // Suffix matching: check the last 10 digits of the phone number to prevent duplicates (e.g. country codes)
+      let existingLead = null;
+      if (cleanPhone.length >= 10) {
+        const last10 = cleanPhone.substring(cleanPhone.length - 10);
+        existingLead = await Lead.findOne({
+          phone: { $regex: new RegExp(last10 + '$') }
+        });
+      } else {
+        existingLead = await Lead.findOne({ phone: cleanPhone });
+      }
 
       if (existingLead) {
-        logger.info(`Lead already exists for phone: ${cleanPhone}. Updating fields.`);
+        logger.info(`Lead already exists for phone suffix match: ${existingLead.phone}. Updating fields.`);
+        // Update to the longer country-coded format if cleanPhone is longer
+        if (cleanPhone.length > existingLead.phone.length) {
+          existingLead.phone = cleanPhone;
+        }
         
         // Merge fields if they are provided and non-empty
         if (leadData.name) existingLead.name = leadData.name;
