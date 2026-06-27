@@ -1,0 +1,293 @@
+# AI WhatsApp Business Automation Platform for SocialBuzzz18
+
+A production-grade, containerized AI-powered WhatsApp automation and lead generation platform designed for **SocialBuzzz18** (a digital growth agency). This platform listens to incoming WhatsApp messages, utilizes **Cerebras Inference API** (running **Llama-3.3-70B**) to understand client queries, saves conversations, and automatically extracts details to build a lead pipeline when customer purchase intent is detected.
+
+---
+
+## Features
+
+- **Persistent WhatsApp Session**: Scan the QR code once; session state is stored in a Docker-mounted volume.
+- **Auto Reconnect**: Automatically monitors and recovers connection dropouts.
+- **AI-Powered Customer Reps**: Answers questions naturally based on SocialBuzzz18 agency services, team structure, local focus (Kalaburagi), and custom pricing guidelines.
+- **Lead Capture Pipeline**: Automatically identifies "purchase intent" (e.g., website inquiries, pricing, social media management requests) and extracts the contact's name, email, business name, and project requirements.
+- **Multi-Format Inbound Media Decryption**: Automatically decrypts and stores incoming images, videos, documents, PDFs, location coordinates, and contact cards.
+- **Comprehensive REST API**: Fully features CRUD operations on leads, chats, session status, and manual message broadcasts.
+- **Sleek QR Display Dashboard**: A built-in web portal showing real-time WhatsApp link states.
+
+---
+
+## Directory Structure
+
+```
+├── tokens/                 # Persistent storage for WhatsApp credentials (WPPConnect tokens)
+├── uploads/                # Persistent storage for inbound & outbound media (images, PDFs)
+│   ├── inbound/
+│   └── outbound/
+├── logs/                   # System error and activity log files
+├── src/
+│   ├── config/             # Environment variables and validator services
+│   ├── database/           # MongoDB initializers and lifecycle hooks
+│   ├── models/             # Mongoose schemas (Conversation, Message, Lead)
+│   ├── ai/                 # AIProvider interface, Cerebras implementation, Prompt Manager
+│   ├── wpp/                # WPPConnect client singleton and event handlers
+│   ├── services/           # Conversation context and Lead business services
+│   ├── controllers/        # REST controllers (Session, Chat, Lead)
+│   ├── routes/             # API routing setup
+│   ├── middleware/         # Winston logger and global error middleware
+│   └── utils/              # Core loggers, test utilities, file helpers
+├── Dockerfile              # Docker image definition (installs Chromium dependencies)
+├── docker-compose.yml      # Orchestrates app and MongoDB containers
+└── README.md               # Master project documentation
+```
+
+---
+
+## Environment Variables
+
+Copy the `.env.example` file to `.env` and fill in the details:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Required | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `PORT` | No | `3000` | Port for the HTTP API server. |
+| `CEREBRAS_API_KEY` | **Yes** | — | API credential key generated from your Cerebras account. |
+| `CEREBRAS_MODEL` | No | `llama-3.3-70b` | LLM model used for inference (supports Llama models). |
+| `WPP_SESSION_NAME` | No | `socialbuzzz18-bot` | WPPConnect session identifier. |
+| `LOG_LEVEL` | No | `info` | Detail levels for winston logger (`debug`, `info`, `warn`, `error`). |
+
+---
+
+## Docker Quickstart (Production Setup)
+
+Ensure you have **Docker** and **Docker Compose** installed.
+
+### 1. Build and Start the Containers
+
+Launch the multi-container configuration (MongoDB + Node application):
+
+```bash
+docker compose up -d --build
+```
+
+This commands spins up:
+- A MongoDB instance mapping `mongodb_data` to `/data/db`.
+- The Node application, running transpiled production code, mapping directories:
+  - `./tokens` inside the project to retain login tokens across restarts.
+  - `./uploads` to store downloaded/uploaded files.
+  - `./logs` to store Winston logs.
+
+### 2. Pairing Your WhatsApp Account
+
+Once the container starts:
+1. Open your web browser and navigate to: **`http://localhost:3000/`**
+2. Click **Initialize Session** if the status shows *Disconnected*.
+3. Once the status shows **Scan QR Code**, a QR code will render on the webpage. (Alternatively, you can read the ASCII representation from Docker logs: `docker compose logs -f app`).
+4. Scan the QR code with your WhatsApp Business app (Settings > Linked Devices).
+5. The dashboard will automatically refresh and display a green **Connected** status.
+
+### 3. Service Lifecycle
+
+```bash
+# Check status of container services
+docker compose ps
+
+# View real-time logs
+docker compose logs -f
+
+# Restart services (will auto-login using saved session tokens)
+docker compose restart
+
+# Tear down the stack (retaining volume folders)
+docker compose down
+```
+
+---
+
+## Local Development (Without Docker)
+
+### Prerequisites
+- **Node.js** v20+
+- **MongoDB** running locally on port `27017`
+
+### Setup Steps
+1. Install project dependencies:
+   ```bash
+   npm install
+   ```
+2. Create your `.env` configuration file and insert your `CEREBRAS_API_KEY`.
+3. Start the application in development mode:
+   ```bash
+   npm run dev
+   ```
+4. Run code compilation to test for compilation compliance:
+   ```bash
+   npm run build
+   ```
+
+---
+
+## Verification & AI Testing
+
+To verify the AI prompt engine and check your Cerebras credential connection without spinning up Puppeteer/WhatsApp, run the test script:
+
+```bash
+# Run the test client using ts-node
+npx ts-node src/utils/test-ai.ts
+```
+
+It outputs the AI's reply and shows structured JSON lead extraction properties.
+
+---
+
+## REST API Reference
+
+The server exposes the following REST APIs under the `/api` prefix:
+
+### 1. Session Management
+
+#### `GET /api/session/status`
+Returns the current connection state of the WhatsApp client.
+*   **Response (200 OK)**:
+    ```json
+    {
+      "success": true,
+      "data": {
+        "status": "CONNECTED",
+        "connected": true
+      }
+    }
+    ```
+
+#### `GET /api/session/qr`
+Returns the base64-encoded QR code.
+*   **Response (200 OK)**:
+    ```json
+    {
+      "success": true,
+      "data": {
+        "base64": "data:image/png;base64,iVBORw0KGgo...",
+        "url": "2@s1u7j..."
+      }
+    }
+    ```
+
+#### `POST /api/session/init`
+Manually triggers WhatsApp client browser startup.
+
+#### `POST /api/session/disconnect`
+Disconnects the WhatsApp client and removes credentials.
+
+---
+
+### 2. Lead Management
+
+#### `GET /api/leads`
+Retrieves all captured leads, sorted by extraction date descending.
+*   **Response (200 OK)**:
+    ```json
+    {
+      "success": true,
+      "data": [
+        {
+          "_id": "60c72b2f9b1d8b2c2c8b4567",
+          "name": "David",
+          "business": "David's Fashion Hub",
+          "phone": "919876543210",
+          "email": "david@fashionhub.com",
+          "requirements": "Wants a website and Instagram reels management",
+          "status": "new",
+          "sourceConversation": "919876543210@c.us",
+          "extractedAt": "2026-06-27T08:00:00.000Z"
+        }
+      ]
+    }
+    ```
+
+#### `PUT /api/leads/:id`
+Updates the status of a lead.
+*   **Body**:
+    ```json
+    {
+      "status": "qualified" // "new" | "contacted" | "lost" | "qualified"
+    }
+    ```
+
+---
+
+### 3. Chat History & Manual Dispatch
+
+#### `GET /api/chats`
+Lists all conversations tracked by the platform.
+
+#### `GET /api/chats/:phone`
+Fetches the last 15 messages (including location & media details) of a customer conversation.
+
+#### `POST /api/chats/:phone/send`
+Manually broadcasts a message to a customer. This suspends AI auto-reply for this message transaction.
+
+- **Send Text Message**:
+  * **Payload**:
+    ```json
+    {
+      "messageType": "text",
+      "message": "Hello, let's schedule that meeting for tomorrow."
+    }
+    ```
+
+- **Send Media File (Image, PDF, Document)**:
+  * **Payload**:
+    ```json
+    {
+      "messageType": "pdf",
+      "filename": "proposal.pdf",
+      "base64": "JVBERi0xLjQKJ..."
+    }
+    ```
+
+- **Send Location**:
+  * **Payload**:
+    ```json
+    {
+      "messageType": "location",
+      "latitude": "17.3297",
+      "longitude": "76.8343",
+      "locationTitle": "SocialBuzzz18 Kalaburagi office"
+    }
+    ```
+
+- **Send Contact Card (vCard)**:
+  * **Payload**:
+    ```json
+    {
+      "messageType": "vcard",
+      "contactPhone": "919876543211",
+      "contactName": "Sachin Kadli (SocialBuzzz18 Founder)"
+    }
+    ```
+
+---
+
+## Health Checks
+
+#### `GET /health`
+Returns the status of internal dependencies.
+*   **Response (200 OK / 503 Service Unavailable)**:
+    ```json
+    {
+      "success": true,
+      "status": "UP",
+      "timestamp": "2026-06-27T08:21:46.000Z",
+      "services": {
+        "database": {
+          "status": "CONNECTED"
+        },
+        "whatsapp": {
+          "status": "CONNECTED",
+          "connected": true
+        }
+      }
+    }
+    ```

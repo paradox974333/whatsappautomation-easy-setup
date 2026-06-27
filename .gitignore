@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build Outputs
+dist/
+build/
+
+# Environment Configuration (Sensitive)
+.env
+.env*.local
+
+# Application Data & Session Store (Extremely Sensitive)
+tokens/
+uploads/
+logs/
+
+# IDE and OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

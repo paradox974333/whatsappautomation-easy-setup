@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whatsapp-ai-automation-app
+    restart: always
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/whatsapp-bot
+      - CEREBRAS_API_KEY=${CEREBRAS_API_KEY}
+      - CEREBRAS_MODEL=${CEREBRAS_MODEL:-llama-3.3-70b}
+      - WPP_SESSION_NAME=${WPP_SESSION_NAME:-socialbuzzz18-bot}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - OWNER_PHONE_NUMBER=${OWNER_PHONE_NUMBER}
+    depends_on:
+      - mongodb
+    volumes:
+      - ./tokens:/app/tokens
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+      - ./assets:/app/assets
+
+  mongodb:
+    image: mongo:7.0
+    container_name: whatsapp-ai-automation-db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+    driver: local
