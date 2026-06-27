@@ -18,6 +18,7 @@ services:
       - WPP_SESSION_NAME=${WPP_SESSION_NAME:-socialbuzzz18-bot}
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - OWNER_PHONE_NUMBER=${OWNER_PHONE_NUMBER}
+      - MEETING_LINK=${MEETING_LINK}
     depends_on:
       - mongodb
     volumes:

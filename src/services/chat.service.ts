@@ -136,10 +136,7 @@ export class ChatService {
       // Handle meeting booking confirmation
       let meetLink = '';
       if (aiResponse.bookingIntent && aiResponse.bookingDetails?.confirmed && aiResponse.bookingDetails.date && aiResponse.bookingDetails.time) {
-        const meetCode = Math.random().toString(36).substring(2, 5) + '-' + 
-                         Math.random().toString(36).substring(2, 7) + '-' + 
-                         Math.random().toString(36).substring(2, 5);
-        meetLink = `https://meet.google.com/${meetCode}`;
+        meetLink = config.meetingLink || 'https://meet.google.com/socialbuzzz-consult';
         
         // Append confirmation text to response
         aiResponse.response += `\n\n📅 *Meeting Confirmed!*\n• *Date*: ${aiResponse.bookingDetails.date}\n• *Time*: ${aiResponse.bookingDetails.time}\n• *Google Meet Link*: ${meetLink}\n\nWe look forward to speaking with you!`;

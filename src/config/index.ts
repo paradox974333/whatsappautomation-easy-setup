@@ -25,4 +25,5 @@ export const config = {
   tokenDir: process.env.TOKEN_DIR || path.join(process.cwd(), 'tokens'),
   puppeteerExecutablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '',
   ownerPhoneNumber: process.env.OWNER_PHONE_NUMBER || '919900239806',
+  meetingLink: process.env.MEETING_LINK || 'https://meet.google.com/socialbuzzz-consult',
 };
