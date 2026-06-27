@@ -26,4 +26,6 @@ export const config = {
   puppeteerExecutablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '',
   ownerPhoneNumber: process.env.OWNER_PHONE_NUMBER || '919900239806',
   meetingLink: process.env.MEETING_LINK || 'https://meet.google.com/socialbuzzz-consult',
+  followUpDelayMinutes: parseInt(process.env.FOLLOW_UP_DELAY_MINUTES || '1440', 10),
+  crmWebhookUrl: process.env.CRM_WEBHOOK_URL || '',
 };

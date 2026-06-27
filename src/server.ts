@@ -4,6 +4,7 @@ import { connectDatabase } from './database';
 import { WppClient } from './wpp/wpp.client';
 import { handleIncomingMessage } from './wpp/wpp.handler';
 import { logger } from './utils/logger';
+import { FollowUpService } from './services/followup.service';
 
 const startServer = async () => {
   try {
@@ -62,6 +63,10 @@ const startServer = async () => {
       logger.info(`  QR Dashboard: http://localhost:${config.port}/`);
       logger.info(`==================================================`);
     });
+
+    // 2b. Start background follow-up scheduler
+    const followUpService = new FollowUpService();
+    followUpService.startScheduler();
 
     // 3. Auto-initialize WPPConnect WhatsApp Client in the background
     logger.info('Auto-initializing WhatsApp automation client...');

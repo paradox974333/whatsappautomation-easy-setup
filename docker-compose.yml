@@ -19,6 +19,8 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - OWNER_PHONE_NUMBER=${OWNER_PHONE_NUMBER}
       - MEETING_LINK=${MEETING_LINK}
+      - FOLLOW_UP_DELAY_MINUTES=${FOLLOW_UP_DELAY_MINUTES}
+      - CRM_WEBHOOK_URL=${CRM_WEBHOOK_URL}
     depends_on:
       - mongodb
     volumes:

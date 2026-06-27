@@ -1,5 +1,6 @@
 import { Lead, ILead } from '../models/lead.model';
 import { logger } from '../utils/logger';
+import { config } from '../config';
 
 export class LeadService {
   public async getLeads(): Promise<ILead[]> {
@@ -57,7 +58,9 @@ export class LeadService {
           existingLead.sourceConversation = leadData.sourceConversation;
         }
 
-        return await existingLead.save();
+        const savedLead = await existingLead.save();
+        this.dispatchCrmWebhook(savedLead);
+        return savedLead;
       }
 
       logger.info(`Creating new lead for phone: ${cleanPhone}`);
@@ -68,7 +71,9 @@ export class LeadService {
         extractedAt: new Date()
       });
 
-      return await newLead.save();
+      const savedLead = await newLead.save();
+      this.dispatchCrmWebhook(savedLead);
+      return savedLead;
     } catch (error) {
       logger.error(`Error in createOrUpdateLead for phone ${phone}:`, error);
       throw error;
@@ -76,15 +81,54 @@ export class LeadService {
   }
 
   public async updateLeadStatus(id: string, status: ILead['status']): Promise<ILead | null> {
-    return Lead.findByIdAndUpdate(
+    const updatedLead = await Lead.findByIdAndUpdate(
       id,
       { status },
       { new: true, runValidators: true }
     );
+    if (updatedLead) {
+      this.dispatchCrmWebhook(updatedLead);
+    }
+    return updatedLead;
   }
 
   public async deleteLead(id: string): Promise<boolean> {
     const result = await Lead.findByIdAndDelete(id);
     return result !== null;
+  }
+
+  private async dispatchCrmWebhook(lead: ILead): Promise<void> {
+    const url = config.crmWebhookUrl;
+    if (!url) return;
+
+    try {
+      logger.info(`Dispatching lead details to CRM webhook: ${url}`);
+      const payload = {
+        id: lead._id,
+        name: lead.name,
+        business: lead.business,
+        phone: lead.phone,
+        email: lead.email,
+        requirements: lead.requirements,
+        status: lead.status,
+        sourceConversation: lead.sourceConversation,
+        extractedAt: lead.extractedAt,
+        updatedAt: lead.updatedAt
+      };
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        logger.warn(`CRM Webhook returned non-OK status: ${response.status} ${response.statusText}`);
+      } else {
+        logger.info('CRM Webhook dispatched successfully.');
+      }
+    } catch (err: any) {
+      logger.error(`Failed to dispatch CRM webhook to ${url}:`, err);
+    }
   }
 }

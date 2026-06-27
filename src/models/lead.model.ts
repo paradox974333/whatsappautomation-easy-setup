@@ -7,6 +7,7 @@ export interface ILead extends Document {
   email?: string;
   requirements?: string;
   status: 'new' | 'contacted' | 'lost' | 'qualified';
+  followUpStatus: 'pending' | 'sent' | 'skipped';
   sourceConversation: string; // references conversation chatId
   extractedAt: Date;
   createdAt: Date;
@@ -24,6 +25,11 @@ const LeadSchema = new Schema<ILead>({
     required: true, 
     enum: ['new', 'contacted', 'lost', 'qualified'], 
     default: 'new' 
+  },
+  followUpStatus: {
+    type: String,
+    enum: ['pending', 'sent', 'skipped'],
+    default: 'pending'
   },
   sourceConversation: { type: String, required: true, index: true },
   extractedAt: { type: Date, required: true, default: Date.now }
