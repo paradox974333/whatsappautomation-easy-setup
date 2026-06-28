@@ -14,7 +14,19 @@
 
 ---
 
-## 🧒 What is this?
+## 🤖 Set it up in one line with Claude Code
+
+Don't want to run commands yourself? Paste this single prompt into [Claude Code](https://claude.com/claude-code) and it will clone the repo, install everything, help you add your API key, customize the bot for your business, and launch it:
+
+```text
+Set up github.com/paradox974333/whatsappautomation-easy-setup for me — clone it, install dependencies, help me add my free Cerebras API key, customize the bot for my business, then launch it with Docker and show me the QR code to scan.
+```
+
+Prefer to do it manually? The [Quick start](#-quick-start-60-seconds) below has you covered.
+
+---
+
+## 🧒 What is this? (in plain English)
 
 Imagine you run any business and customers message you on WhatsApp all day asking the same things — *"What do you offer?"*, *"How much?"*, *"Can we talk?"*. Answering each one yourself takes hours.
 

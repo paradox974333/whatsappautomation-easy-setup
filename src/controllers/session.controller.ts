@@ -81,18 +81,17 @@ export class SessionController {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WhatsApp AI Bot — Session Link</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #0b0f19;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --bg-color: #f5f5f7;
+      --card-bg: #ffffff;
+      --card-border: #e8e8ed;
       --primary-color: #25d366; /* WhatsApp Green */
-      --accent-color: #6366f1; /* Premium Violet */
-      --text-color: #ffffff;
-      --text-secondary: #94a3b8;
+      --accent-color: #0071e3; /* Azure */
+      --text-color: #1d1d1f;
+      --text-secondary: #707070;
     }
-    
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -100,8 +99,8 @@ export class SessionController {
     }
 
     body {
-      font-family: 'Outfit', sans-serif;
-      background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, var(--bg-color) 70%);
+      font-family: 'SF Pro Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-color);
       color: var(--text-color);
       min-height: 100vh;
       display: flex;
@@ -109,74 +108,77 @@ export class SessionController {
       align-items: center;
       justify-content: center;
       padding: 20px;
+      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
     .container {
-      max-width: 500px;
+      max-width: 420px;
       width: 100%;
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 40px 30px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border-radius: 28px;
+      padding: 40px 32px;
       text-align: center;
-      transition: transform 0.3s ease;
+    }
+
+    .wa-logo {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 18px;
+      border-radius: 22%;
+      background: #25d366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #ffffff 30%, var(--text-secondary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.022em;
+      margin-bottom: 6px;
+      color: var(--text-color);
     }
 
     .subtitle {
       color: var(--text-secondary);
-      font-size: 1rem;
-      margin-bottom: 30px;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 22px;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 100px;
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: all 0.3s ease;
+      font-size: 0.8rem;
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+      transition: all 0.2s ease;
     }
 
     .status-connected {
-      background: rgba(37, 211, 102, 0.1);
-      color: var(--primary-color);
-      border: 1px solid rgba(37, 211, 102, 0.2);
+      background: rgba(37, 211, 102, 0.12);
+      color: #1a8a4a;
     }
 
     .status-initializing {
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(0, 113, 227, 0.1);
       color: var(--accent-color);
-      border: 1px solid rgba(99, 102, 241, 0.2);
     }
 
     .status-qr {
-      background: rgba(245, 158, 11, 0.1);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.12);
+      color: #b45309;
     }
 
     .status-disconnected {
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      background: #f5f5f7;
+      color: var(--text-secondary);
     }
 
     .status-dot {
@@ -191,11 +193,10 @@ export class SessionController {
     }
 
     .qr-container {
-      width: 250px;
-      height: 250px;
-      margin: 0 auto 30px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 2px dashed rgba(255, 255, 255, 0.1);
+      width: 244px;
+      height: 244px;
+      margin: 0 auto 24px;
+      background: #f5f5f7;
       border-radius: 20px;
       display: flex;
       align-items: center;
@@ -205,19 +206,18 @@ export class SessionController {
     }
 
     .qr-img {
-      width: 90%;
-      height: 90%;
+      width: 92%;
+      height: 92%;
       object-fit: contain;
       border-radius: 12px;
       background: #ffffff;
-      padding: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      padding: 8px;
     }
 
     .loading-spinner {
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      width: 50px;
-      height: 50px;
+      border: 3px solid rgba(0, 0, 0, 0.08);
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border-left-color: var(--accent-color);
       animation: spin 1s linear infinite;
@@ -226,41 +226,40 @@ export class SessionController {
     .btn {
       display: inline-block;
       width: 100%;
-      padding: 14px;
-      border-radius: 14px;
+      padding: 13px;
+      border-radius: 999px;
       font-family: inherit;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 500;
       border: none;
       cursor: pointer;
-      transition: all 0.3s ease;
-      background: linear-gradient(135deg, var(--accent-color) 0%, #4f46e5 100%);
+      transition: opacity 0.15s ease;
+      background: var(--accent-color);
       color: #ffffff;
-      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.6);
+      opacity: 0.9;
     }
 
-    .btn:active {
-      transform: translateY(0);
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
 
     .instructions {
       text-align: left;
-      margin-top: 30px;
-      background: rgba(255, 255, 255, 0.01);
-      border-radius: 16px;
-      padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.02);
+      margin-top: 24px;
+      background: #f5f5f7;
+      border-radius: 18px;
+      padding: 18px;
     }
 
     .instructions p {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       margin-bottom: 12px;
       color: var(--text-secondary);
+      letter-spacing: -0.006em;
       display: flex;
       align-items: flex-start;
       gap: 10px;
@@ -271,14 +270,14 @@ export class SessionController {
     }
 
     .step-num {
-      background: rgba(255, 255, 255, 0.1);
+      background: #1d1d1f;
       width: 22px;
       height: 22px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: #ffffff;
       flex-shrink: 0;
@@ -299,8 +298,13 @@ export class SessionController {
 <body>
 
   <div class="container">
-    <h1>WhatsApp AI Bot</h1>
-    <div class="subtitle">WhatsApp AI Agent Link Manager</div>
+    <div class="wa-logo">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="#ffffff" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+      </svg>
+    </div>
+    <h1>Link your WhatsApp</h1>
+    <div class="subtitle">Scan once — it stays connected.</div>
 
     <div id="statusBadge" class="status-badge status-disconnected">
       <span class="status-dot"></span>
@@ -344,8 +348,8 @@ export class SessionController {
             qrContainer.innerHTML = '<div style="color: var(--primary-color); font-size: 4rem; font-weight: bold;">✓</div>';
             actionBtn.innerText = 'Disconnect Bot';
             actionBtn.setAttribute('onclick', 'disconnectSession()');
-            actionBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-            actionBtn.style.boxShadow = '0 10px 20px -5px rgba(239, 68, 68, 0.4)';
+            actionBtn.disabled = false;
+            actionBtn.style.background = '#ef4444';
           } else if (status === 'INITIALIZING') {
             badge.classList.add('status-initializing');
             statusText.innerText = 'Initializing';
@@ -366,8 +370,7 @@ export class SessionController {
             actionBtn.innerText = 'Initialize Session';
             actionBtn.disabled = false;
             actionBtn.setAttribute('onclick', 'initializeSession()');
-            actionBtn.style.background = 'linear-gradient(135deg, var(--accent-color) 0%, #4f46e5 100%)';
-            actionBtn.style.boxShadow = '0 10px 20px -5px rgba(99, 102, 241, 0.4)';
+            actionBtn.style.background = 'var(--accent-color)';
           }
         }
       } catch (error) {
@@ -430,17 +433,16 @@ export class SessionController {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WhatsApp AI Bot — Admin Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-slate-900: #0f172a;
-      --bg-slate-800: #1e293b;
-      --bg-slate-700: #334155;
-      --border-slate-700: #334155;
-      --text-slate-50: #f8fafc;
-      --text-slate-400: #94a3b8;
-      --accent-blue: #3b82f6;
-      --accent-green: #22c55e;
+      --bg-slate-900: #f5f5f7; /* canvas / recessed */
+      --bg-slate-800: #ffffff; /* cards / header */
+      --bg-slate-700: #eef0f2; /* subtle fill */
+      --border-slate-700: #e8e8ed;
+      --text-slate-50: #1d1d1f; /* primary text */
+      --text-slate-400: #707070; /* secondary text */
+      --accent-blue: #0071e3;
+      --accent-green: #25d366;
       --accent-red: #ef4444;
       --accent-orange: #f59e0b;
     }
@@ -452,12 +454,13 @@ export class SessionController {
     }
 
     body {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'SF Pro Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-slate-900);
       color: var(--text-slate-50);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Header Bar */
@@ -565,7 +568,7 @@ export class SessionController {
 
     .nav-btn.active {
       background: var(--accent-blue);
-      color: var(--text-slate-50);
+      color: #ffffff;
     }
 
     /* Content Area */
@@ -625,7 +628,7 @@ export class SessionController {
     }
 
     tr:hover td {
-      background: rgba(255, 255, 255, 0.01);
+      background: rgba(0, 0, 0, 0.02);
     }
 
     .lead-status-select {
@@ -670,7 +673,7 @@ export class SessionController {
 
     .chat-item {
       padding: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -743,7 +746,7 @@ export class SessionController {
 
     .msg-meta {
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(0, 0, 0, 0.4);
       margin-top: 5px;
       text-align: right;
     }
@@ -798,7 +801,7 @@ export class SessionController {
     .qr-box {
       width: 250px;
       height: 250px;
-      background: rgba(255, 255, 255, 0.02);
+      background: #f5f5f7;
       border: 2px dashed var(--border-slate-700);
       border-radius: 12px;
       margin: 20px auto;
@@ -851,7 +854,12 @@ export class SessionController {
 <body>
 
   <header>
-    <div class="brand-title">WhatsApp AI Bot <span>Admin</span></div>
+    <div class="brand-title" style="display:flex;align-items:center;gap:10px;">
+      <span style="width:28px;height:28px;border-radius:22%;background:#25d366;display:inline-flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="#ffffff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </span>
+      WhatsApp AI Bot <span>Admin</span>
+    </div>
     <div class="status-panel">
       <div id="badge" class="header-badge badge-disconnected">
         <span class="badge-dot"></span>
