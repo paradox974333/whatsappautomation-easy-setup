@@ -464,6 +464,16 @@ Want to use a different AI provider? The AI layer is abstracted behind [`src/ai/
 
 ---
 
+## 🌐 Landing page (deploy in one click)
+
+This repo ships a polished marketing landing page in [`landing/`](landing/) (React + Vite + Tailwind). A root [`vercel.json`](vercel.json) makes it **zero-config** to deploy — import the repo on Vercel and hit Deploy, no settings to change:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fparadox974333%2Fwhatsappautomation-easy-setup)
+
+After deploying, paste the live URL into your repo's **About → Website** so visitors find it. Run it locally with `cd landing && npm install && npm run dev`.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome and appreciated! See [CONTRIBUTING.md](CONTRIBUTING.md) to get started. Good first issues include docs, new AI providers, extra message types, and persona examples for new use cases.
@@ -474,6 +484,39 @@ Contributions are welcome and appreciated! See [CONTRIBUTING.md](CONTRIBUTING.md
 
 - Never commit your `.env`, `tokens/`, `uploads/`, or `logs/` — these contain secrets and personal data. They are gitignored by default. See [SECURITY.md](SECURITY.md).
 - This is an **unofficial** automation tool built on WPPConnect. Automating WhatsApp may violate WhatsApp's Terms of Service — use responsibly and at your own risk.
+
+---
+
+## 📣 Spread the word
+
+<details>
+<summary><b>Ready-to-post launch copy</b> (click to expand)</summary>
+
+**Hacker News — "Show HN"**
+
+> **Show HN: Open-source AI agent that runs your WhatsApp — replies, captures leads, books meetings**
+>
+> I built an open-source bot that turns any WhatsApp number into a 24/7 AI sales/support agent. It reads incoming messages, replies naturally (Cerebras + Llama, free tier), saves conversations, auto-captures leads when it detects buying intent, and even negotiates and books meetings. You scan a QR once like WhatsApp Web — no second SIM. Rebrand it for any business by editing one text file. Self-host with one Docker command. MIT licensed.
+>
+> Repo: https://github.com/paradox974333/whatsappautomation-easy-setup
+
+**Reddit — r/selfhosted / r/SideProject**
+
+> **I open-sourced a self-hosted AI agent for WhatsApp (replies, leads, bookings) — free to run**
+>
+> It links to your existing WhatsApp number (scan once, like WhatsApp Web), then answers customers 24/7 using AI based on a persona file you write for your business. It captures leads automatically and books meetings, with a built-in dashboard and REST API. Runs on Cerebras' free tier (~1M tokens/day) and self-hosts with Docker on any cheap VM. No code needed to customize — you edit one file.
+>
+> Repo + 1-line setup: https://github.com/paradox974333/whatsappautomation-easy-setup. Feedback welcome!
+
+**X / LinkedIn**
+
+> Turned my WhatsApp into a 24/7 AI agent — it replies to customers, captures leads, and books meetings automatically. 🤖
+>
+> Open source (MIT), self-hosted with Docker, free AI via Cerebras. Rebrand for any business by editing one file. You can even set it up by pasting one line into Claude Code.
+>
+> ⭐ https://github.com/paradox974333/whatsappautomation-easy-setup
+
+</details>
 
 ---
 

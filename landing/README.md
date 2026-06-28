@@ -12,15 +12,16 @@ npm run build    # production build → dist/
 npm run preview  # preview the production build
 ```
 
-## Deploy to Vercel (1 minute)
+## Deploy to Vercel (zero config)
 
-Because this lives in a subfolder of the main repo, point Vercel at it:
+A `vercel.json` at the repo root already tells Vercel how to build this subfolder, so there's **nothing to configure**:
 
 1. Go to [vercel.com/new](https://vercel.com/new) and **import** the GitHub repo.
-2. When Vercel asks, set **Root Directory** to `landing`.
-3. Framework preset auto-detects as **Vite**. Leave the defaults:
-   - Build command: `npm run build`
-   - Output directory: `dist`
-4. Click **Deploy**. Done — every push to `main` redeploys automatically.
+2. Leave every setting as-is (don't change the Root Directory).
+3. Click **Deploy**. Done — every push to `main` redeploys automatically.
+
+Or use the one-click button:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fparadox974333%2Fwhatsappautomation-easy-setup)
 
 > Tip: after the first deploy, copy the live URL and paste it into your GitHub repo's **About → Website** field so visitors find it.
