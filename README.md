@@ -14,7 +14,7 @@
 
 ---
 
-## 🧒 What is this? (in plain English)
+## 🧒 What is this?
 
 Imagine you run any business and customers message you on WhatsApp all day asking the same things — *"What do you offer?"*, *"How much?"*, *"Can we talk?"*. Answering each one yourself takes hours.
 
