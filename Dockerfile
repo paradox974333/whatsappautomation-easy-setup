@@ -44,6 +44,9 @@ RUN npm ci
 COPY tsconfig.json ./
 COPY src/ ./src/
 
+# Editable AI persona (rebrand the assistant by editing prompt/persona.md)
+COPY prompt/ ./prompt/
+
 # Transpile TypeScript to JavaScript
 RUN npm run build
 

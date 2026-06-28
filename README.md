@@ -1,6 +1,41 @@
-# AI WhatsApp Business Automation Platform for SocialBuzzz18
+# 🤖 AI WhatsApp Business Automation
 
-A production-grade, containerized AI-powered WhatsApp automation and lead generation platform designed for **SocialBuzzz18** (a digital growth agency). This platform listens to incoming WhatsApp messages, utilizes **Cerebras Inference API** (running **Llama-3.3-70B**) to understand client queries, saves conversations, and automatically extracts details to build a lead pipeline when customer purchase intent is detected.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Docker Ready](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+> **Turn your WhatsApp into a 24/7 AI sales & support agent for *any* business.** It reads incoming messages, replies naturally using the **Cerebras Inference API** (Llama-3.3-70B), remembers conversations, captures leads automatically when it detects buying intent, and even negotiates and books meetings.
+
+**Built for anyone.** Out of the box it ships with an example agency persona, but you make it *your* bot by editing a single file — [`prompt/persona.md`](prompt/persona.md). No code changes needed. Use it for a shop, clinic, restaurant, freelancer, SaaS, support desk — anything.
+
+⭐ **If this saves you time, please star the repo — it genuinely helps others find it.**
+
+---
+
+## 🎯 Make it your own (start here)
+
+This is a **template**, not a finished product locked to one company. To rebrand the bot for your business:
+
+1. Open [`prompt/persona.md`](prompt/persona.md).
+2. Replace the `[PLACEHOLDERS]` with your business name, services, pricing approach, and tone.
+3. Save and restart — that's it. The lead-capture and meeting-booking logic keeps working automatically.
+
+Need inspiration? A complete real-world example lives in [`prompt/persona.socialbuzzz18.example.md`](prompt/persona.socialbuzzz18.example.md).
+
+---
+
+## ⚡ Quick start (60 seconds)
+
+```bash
+git clone https://github.com/paradox974333/whatsappautomation-socialbuzzzz.git
+cd whatsappautomation-socialbuzzzz
+cp .env.example .env          # add your free CEREBRAS_API_KEY (https://cloud.cerebras.ai)
+docker compose up -d --build  # starts the app + MongoDB
+```
+
+Then open **http://localhost:3000/**, scan the QR code with WhatsApp (Settings → Linked Devices), and your bot is live. Full Docker and non-Docker instructions are below.
 
 ---
 
@@ -24,6 +59,7 @@ A production-grade, containerized AI-powered WhatsApp automation and lead genera
 │   ├── inbound/
 │   └── outbound/
 ├── logs/                   # System error and activity log files
+├── prompt/                 # Editable AI persona — rebrand the bot here (persona.md)
 ├── src/
 │   ├── config/             # Environment variables and validator services
 │   ├── database/           # MongoDB initializers and lifecycle hooks
@@ -291,3 +327,30 @@ Returns the status of internal dependencies.
       }
     }
     ```
+
+---
+
+## 🛠️ Tech Stack
+
+Node.js · TypeScript · Express · MongoDB (Mongoose) · [WPPConnect](https://github.com/wppconnect-team/wppconnect) · [Cerebras Inference API](https://cloud.cerebras.ai) (Llama-3.3-70B) · Winston · Docker.
+
+Want to use a different AI provider? The AI layer is abstracted behind [`src/ai/ai.provider.ts`](src/ai/ai.provider.ts) — implement the interface and you're done. PRs welcome!
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome and appreciated! See [CONTRIBUTING.md](CONTRIBUTING.md) to get started. Good first issues include docs, new AI providers, extra message types, and persona examples for new use cases.
+
+---
+
+## 🔐 Security & Responsible Use
+
+- Never commit your `.env`, `tokens/`, `uploads/`, or `logs/` — these contain secrets and personal data. They are gitignored by default. See [SECURITY.md](SECURITY.md).
+- This is an **unofficial** automation tool built on WPPConnect. Automating WhatsApp may violate WhatsApp's Terms of Service — use responsibly and at your own risk.
+
+---
+
+## 📄 License
+
+Released under the [MIT License](LICENSE) — free to use, modify, and distribute, including commercially. If you build something cool with it, a star and a mention are always appreciated. ⭐

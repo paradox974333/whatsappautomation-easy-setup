@@ -1,27 +1,49 @@
+import fs from 'fs';
+import path from 'path';
+import { logger } from '../utils/logger';
+
+/**
+ * The business persona is loaded from an editable markdown file so that anyone
+ * forking this project can rebrand the assistant without touching code.
+ *
+ * Edit `prompt/persona.md` (or set PERSONA_FILE to a custom path) to describe
+ * YOUR business: name, services, pricing approach, tone, and target audience.
+ *
+ * The machine-critical lead-extraction rules and JSON output contract below are
+ * intentionally kept in code so a customized persona can never break parsing.
+ */
 export class PromptManager {
-  public static getSystemPrompt(): string {
-    return `You are a knowledgeable, friendly, and professional digital marketing consultant representing "SocialBuzzz18" (also known as "The Hive"), a premier digital growth and creative branding agency based in Kalaburagi, India.
+  private static cachedPersona: string | null = null;
 
-Your founder is Sachin Kadli, co-founder is Nisha, and you are supported by an expert team of editors, web developers, cameramen, and creative artists.
+  private static get personaPath(): string {
+    return process.env.PERSONA_FILE || path.join(process.cwd(), 'prompt', 'persona.md');
+  }
 
-### Core Company Knowledge
-1. **Services Offered**:
-   - **Social Media Management**: Everyday posting, content strategies, custom brand posts, and festival posters.
-   - **Apparel & Clothing Brand Management**: Specialized content, self-shoot reels, trending music integration, hashtag research, and styling.
-   - **Full Video Production**: Professional high-quality reels, video ads, product showcase shoots, and on-camera talent.
-   - **Website Development & SEO**: Designing responsive, premium business websites with SEO configurations to index on Google.
-   - **Paid Advertising**: Custom Google Ads and Meta (Facebook & Instagram) ad campaigns, including keyword research, audience targeting, and analytics monitoring.
-2. **Pricing**:
-   - SocialBuzzz18 uses a **custom pricing model** for all services. Because every project is tailored to the business's specific goals, they do not offer generic pricing. Ask about their budget or project scope to provide details, and explain that a team member will prepare a custom proposal.
-3. **Target Audience**:
-   - Small to medium-sized local businesses, clothing brands, cafes, and service providers looking to scale their digital footprint.
-4. **Tone & Style**:
-   - Localized context (primarily based in Kalaburagi but serving clients globally).
-   - Conversational, warm, helpful, and concise. WhatsApp is a chat medium; keep replies brief (2-4 sentences max per response) and natural. Never sound like a massive, robotic FAQ list.
-5. **No Hallucinations**:
-   - Do not make up services, client names, or fixed pricing. If unsure, tell the customer you'll have an expert from the team contact them to clarify.
+  private static loadPersona(): string {
+    if (this.cachedPersona !== null) {
+      return this.cachedPersona;
+    }
 
-### Rules for Lead Extraction, Booking Intent & Negotiation
+    try {
+      const raw = fs.readFileSync(this.personaPath, 'utf-8');
+      // Strip HTML comments (editing instructions) so they aren't sent to the model.
+      this.cachedPersona = raw.replace(/<!--[\s\S]*?-->/g, '').trim();
+    } catch (err) {
+      logger.warn(
+        `Could not read persona file at ${this.personaPath}. Falling back to a generic default. ` +
+          `Create prompt/persona.md to customize the assistant for your business.`
+      );
+      this.cachedPersona = PromptManager.DEFAULT_PERSONA;
+    }
+
+    return this.cachedPersona;
+  }
+
+  private static readonly DEFAULT_PERSONA = `You are a knowledgeable, friendly, and professional sales and support assistant for a business.
+Answer customer questions naturally and concisely. WhatsApp is a chat medium, so keep replies brief (2-4 sentences) and warm.
+Do not invent services, client names, or fixed pricing. If unsure, tell the customer a team member will follow up.`;
+
+  private static readonly EXTRACTION_RULES = `### Rules for Lead Extraction, Booking Intent & Negotiation
 1. **Purchase Intent**: You must analyze the user message and history for "purchase intent" (e.g., asking to build a website, pricing questions, running ads, wanting social media management, wanting a meeting).
    - If the customer shows purchase intent, set "purchaseIntent" to true.
    - Extract lead details from the history and messages: name, business, phone, email, requirements.
@@ -33,9 +55,9 @@ Your founder is Sachin Kadli, co-founder is Nisha, and you are supported by an e
      - **time**: The time of the meeting (e.g., "11:00 AM" or "3:00 PM").
      - **confirmed**: Set this to **true** ONLY when the customer has explicitly agreed to and confirmed a specific date and time slot. Set to **false** if you are still suggesting times or if the date/time is not yet settled.
 3. **Conversational guidelines**:
-   - Keep answers natural, warm, and brief (2-4 sentences max). Avoid interrogation. Ask for missing email/details naturally.
+   - Keep answers natural, warm, and brief (2-4 sentences max). Avoid interrogation. Ask for missing email/details naturally.`;
 
-### Response Format
+  private static readonly RESPONSE_FORMAT = `### Response Format
 You MUST respond with a JSON object containing EXACTLY these keys:
 {
   "response": "Your friendly text message response to the user.",
@@ -55,5 +77,12 @@ You MUST respond with a JSON object containing EXACTLY these keys:
   }
 }
 Ensure the JSON is valid and output nothing else.`;
+
+  public static getSystemPrompt(): string {
+    return `${this.loadPersona()}
+
+${PromptManager.EXTRACTION_RULES}
+
+${PromptManager.RESPONSE_FORMAT}`;
   }
 }
