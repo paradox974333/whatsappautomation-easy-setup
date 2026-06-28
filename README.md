@@ -52,11 +52,66 @@ Then open **http://localhost:3000/**, scan the QR code with WhatsApp (Settings �
 
 ---
 
+## 💡 How it works (read this first)
+
+**You scan once with your main WhatsApp (or WhatsApp Business) number — that's it.**
+
+1. Start the app and open the dashboard. A QR code appears.
+2. On your phone, go to **WhatsApp → Settings → Linked Devices → Link a Device** and scan it. This links the bot as a "device" on your account — exactly like WhatsApp Web. **You do not need a second SIM or a separate number** — it uses the same number you already chat from.
+3. From that moment, every message your customers send to that number is read by the AI, which replies automatically, saves the conversation, captures leads, and books meetings.
+4. **The login is saved.** The session is stored in the `tokens/` folder, so even if the app restarts or the server reboots, it logs back in automatically — you never scan again (unless you manually log out or stay offline for a very long time).
+
+> 💬 You can still use WhatsApp normally on your phone at the same time. The bot runs alongside you. If you reply to a chat yourself, the manual `send` API even pauses the AI for that message so you don't talk over each other.
+
+### ⚠️ Keep your phone and the server online
+Because this links like WhatsApp Web, your **phone should stay connected to the internet** and the **server/computer running the bot should stay on**. That's exactly why hosting it on an always-on VM (next section) is the recommended setup — so it answers customers 24/7 even when your laptop is off.
+
+---
+
+## ☁️ Host it 24/7 (run it on a VM / any cloud)
+
+For the bot to reply around the clock, run it on a machine that's always on — any cheap cloud VM works. Because the whole thing is Dockerized, deploying is the same 3 commands everywhere.
+
+**Works on:** AWS EC2, Google Cloud, Azure, DigitalOcean, Hetzner, Linode, Oracle Cloud (has an always-free tier), a Raspberry Pi, or any Linux VPS. A small **1–2 GB RAM** instance is enough (it runs a headless Chromium, so avoid the tiniest 512 MB boxes).
+
+**Deploy on a fresh Ubuntu VM:**
+
+```bash
+# 1. Install Docker + Compose (one-time)
+curl -fsSL https://get.docker.com | sh
+
+# 2. Get the code
+git clone https://github.com/paradox974333/whatsappautomation-socialbuzzzz.git
+cd whatsappautomation-socialbuzzzz
+
+# 3. Configure
+cp .env.example .env
+nano .env            # paste your CEREBRAS_API_KEY, set your OWNER_PHONE_NUMBER, etc.
+
+# 4. Edit your bot's persona
+nano prompt/persona.md
+
+# 5. Launch (runs in the background and restarts on reboot)
+docker compose up -d --build
+```
+
+**Scan the QR remotely:** the dashboard runs on port `3000`. Either open `http://YOUR_SERVER_IP:3000/` in your browser, or read the QR straight from the logs:
+
+```bash
+docker compose logs -f app   # the QR is printed as ASCII in the terminal
+```
+
+Scan it once with your phone and the bot stays linked. The `tokens/`, `uploads/`, and `logs/` folders are mounted as volumes, so your session and data survive restarts and redeploys.
+
+> **Tip:** For production, put it behind a domain + HTTPS (e.g. Nginx or Caddy reverse proxy) and consider restricting the dashboard/API with a firewall or auth, since the REST API can read chats and send messages.
+
+---
+
 ## Features
 
 - **Persistent WhatsApp Session**: Scan the QR code once; session state is stored in a Docker-mounted volume.
 - **Auto Reconnect**: Automatically monitors and recovers connection dropouts.
-- **AI-Powered Customer Reps**: Answers questions naturally based on SocialBuzzz18 agency services, team structure, local focus (Kalaburagi), and custom pricing guidelines.
+- **AI-Powered Customer Reps**: Answers questions naturally based on *your* business knowledge, services, and pricing — all defined in one editable file (`prompt/persona.md`).
 - **Lead Capture Pipeline**: Automatically identifies "purchase intent" (e.g., website inquiries, pricing, social media management requests) and extracts the contact's name, email, business name, and project requirements.
 - **Multi-Format Inbound Media Decryption**: Automatically decrypts and stores incoming images, videos, documents, PDFs, location coordinates, and contact cards.
 - **Comprehensive REST API**: Fully features CRUD operations on leads, chats, session status, and manual message broadcasts.
@@ -91,6 +146,28 @@ Then open **http://localhost:3000/**, scan the QR code with WhatsApp (Settings �
 
 ---
 
+## 🧠 The AI Brain — Cerebras (free to start)
+
+This bot runs on the **[Cerebras Inference API](https://cloud.cerebras.ai)**, which is both extremely fast and has a **generous free tier** — at the time of writing, Cerebras gives you roughly **1 million free tokens per day**, which is more than enough to run a real customer-facing bot at no cost. (Limits change over time — check [cloud.cerebras.ai](https://cloud.cerebras.ai) for the current allowance.)
+
+**Get your free key:**
+1. Sign up at **[cloud.cerebras.ai](https://cloud.cerebras.ai)**.
+2. Create an API key.
+3. Paste it into your `.env` as `CEREBRAS_API_KEY`.
+
+**Use any model you like.** You're not locked to one model — set `CEREBRAS_MODEL` in your `.env` to any model your Cerebras account supports. Examples that are commonly available:
+
+| Model (`CEREBRAS_MODEL`) | Good for |
+| :--- | :--- |
+| `llama-3.3-70b` *(default)* | Best all-round quality for natural sales chat |
+| `llama3.1-8b` | Fastest / cheapest, lighter conversations |
+| `qwen-3-32b` | Strong reasoning, good multilingual support |
+| `llama-4-scout-17b-16e-instruct` | Newer Llama 4 option |
+
+> Model names change as Cerebras adds and retires models. See the **[Cerebras models list](https://inference-docs.cerebras.ai/models/overview)** for what's live today, and just drop the exact name into `CEREBRAS_MODEL`. No code changes needed.
+
+---
+
 ## Environment Variables
 
 Copy the `.env.example` file to `.env` and fill in the details:
@@ -101,11 +178,17 @@ cp .env.example .env
 
 | Variable | Required | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `PORT` | No | `3000` | Port for the HTTP API server. |
-| `CEREBRAS_API_KEY` | **Yes** | — | API credential key generated from your Cerebras account. |
-| `CEREBRAS_MODEL` | No | `llama-3.3-70b` | LLM model used for inference (supports Llama models). |
-| `WPP_SESSION_NAME` | No | `socialbuzzz18-bot` | WPPConnect session identifier. |
-| `LOG_LEVEL` | No | `info` | Detail levels for winston logger (`debug`, `info`, `warn`, `error`). |
+| `CEREBRAS_API_KEY` | **Yes** | — | Your free API key from [cloud.cerebras.ai](https://cloud.cerebras.ai). |
+| `CEREBRAS_MODEL` | No | `llama-3.3-70b` | Any model your Cerebras account supports (see table above). |
+| `PERSONA_FILE` | No | `prompt/persona.md` | Path to the editable bot persona — point this anywhere to swap personalities. |
+| `PORT` | No | `3000` | Port for the HTTP API + dashboard. |
+| `MONGODB_URI` | No | local MongoDB | Connection string. Set automatically by docker-compose. |
+| `WPP_SESSION_NAME` | No | `my-business-bot` | WPPConnect session identifier. |
+| `OWNER_PHONE_NUMBER` | No | — | Your admin WhatsApp number that receives lead & booking alerts. |
+| `MEETING_LINK` | No | — | Meeting link shared with customers when they book a call. |
+| `FOLLOW_UP_DELAY_MINUTES` | No | `1440` | Minutes to wait before an automated follow-up message. |
+| `CRM_WEBHOOK_URL` | No | — | Optional URL that captured leads are POSTed to (CRM/Zapier/etc.). |
+| `LOG_LEVEL` | No | `info` | Logging detail: `debug`, `info`, `warn`, `error`. |
 
 ---
 
