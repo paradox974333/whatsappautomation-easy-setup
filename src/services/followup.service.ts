@@ -55,10 +55,10 @@ export class FollowUpService {
           
           try {
             // Generate follow-up prompt
-            const requirements = lead.requirements || 'discussing digital growth options';
+            const requirements = lead.requirements || 'our services';
             const name = lead.name || 'there';
-            
-            const prompt = `You are a warm, friendly growth advisor from SocialBuzzz18 agency. 
+
+            const prompt = `You are a warm, friendly advisor from ${config.businessName}.
 We spoke recently with a client named "${name}" who was interested in: "${requirements}".
 The client has gone quiet. Draft an ultra-brief, friendly, non-spammy check-in message (1-2 sentences max) asking if they have any other questions or if they are ready to proceed. 
 Do not answer questions or list pricing. Just check in naturally. Do not start with hello/hi if it sounds robotic, sound like a human sending a WhatsApp text.

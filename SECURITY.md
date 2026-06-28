@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-If you discover a security issue, please **do not open a public issue**. Instead, report it privately via [GitHub Security Advisories](https://github.com/paradox974333/whatsappautomation-socialbuzzzz/security/advisories/new) or by contacting the maintainer directly. We'll respond as quickly as we can.
+If you discover a security issue, please **do not open a public issue**. Instead, report it privately via [GitHub Security Advisories](https://github.com/paradox974333/whatsappautomation-easy-setup/security/advisories/new) or by contacting the maintainer directly. We'll respond as quickly as we can.
 
 ## Handling secrets (important for all users)
 

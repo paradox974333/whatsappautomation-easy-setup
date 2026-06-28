@@ -80,7 +80,7 @@ export class SessionController {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SocialBuzzz18 WhatsApp Session Link</title>
+  <title>WhatsApp AI Bot — Session Link</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -299,7 +299,7 @@ export class SessionController {
 <body>
 
   <div class="container">
-    <h1>SocialBuzzz18</h1>
+    <h1>WhatsApp AI Bot</h1>
     <div class="subtitle">WhatsApp AI Agent Link Manager</div>
 
     <div id="statusBadge" class="status-badge status-disconnected">
@@ -429,7 +429,7 @@ export class SessionController {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SocialBuzzz18 - Admin Portal</title>
+  <title>WhatsApp AI Bot — Admin Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -851,7 +851,7 @@ export class SessionController {
 <body>
 
   <header>
-    <div class="brand-title">SocialBuzzz18 <span>Admin</span></div>
+    <div class="brand-title">WhatsApp AI Bot <span>Admin</span></div>
     <div class="status-panel">
       <div id="badge" class="header-badge badge-disconnected">
         <span class="badge-dot"></span>

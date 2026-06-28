@@ -136,7 +136,7 @@ export class ChatService {
       // Handle meeting booking confirmation
       let meetLink = '';
       if (aiResponse.bookingIntent && aiResponse.bookingDetails?.confirmed && aiResponse.bookingDetails.date && aiResponse.bookingDetails.time) {
-        meetLink = config.meetingLink || 'https://meet.google.com/socialbuzzz-consult';
+        meetLink = config.meetingLink;
         
         // Append confirmation text to response
         aiResponse.response += `\n\n📅 *Meeting Confirmed!*\n• *Date*: ${aiResponse.bookingDetails.date}\n• *Time*: ${aiResponse.bookingDetails.time}\n• *Google Meet Link*: ${meetLink}\n\nWe look forward to speaking with you!`;
@@ -194,21 +194,25 @@ export class ChatService {
 
       const date = aiResponse.bookingDetails?.date || 'Tomorrow';
       const time = aiResponse.bookingDetails?.time || 'Confirmed Time';
-      const requirements = aiResponse.leadDetails?.requirements || 'Digital growth services';
+      const requirements = aiResponse.leadDetails?.requirements || 'the requested services';
 
-      // 1. Notify Owner (Sachin Kadli)
-      const rawOwnerPhone = config.ownerPhoneNumber || '919900239806';
-      const ownerJid = rawOwnerPhone.endsWith('@c.us') ? rawOwnerPhone : `${rawOwnerPhone.replace(/\D/g, '')}@c.us`;
-      
-      const ownerMessage = `🔔 *New Meeting Confirmed!*\n\n` +
-        `• *Client*: ${contactName} (${chatId.split('@')[0]})\n` +
-        `• *Date*: ${date}\n` +
-        `• *Time*: ${time}\n` +
-        `• *Meet Link*: ${meetLink}\n` +
-        `• *Needs*: ${requirements}`;
-        
-      logger.info(`Sending meeting notification to owner: ${ownerJid}`);
-      await client.sendText(ownerJid, ownerMessage);
+      // 1. Notify the business owner/admin (set OWNER_PHONE_NUMBER in your .env)
+      const rawOwnerPhone = config.ownerPhoneNumber;
+      if (rawOwnerPhone) {
+        const ownerJid = rawOwnerPhone.endsWith('@c.us') ? rawOwnerPhone : `${rawOwnerPhone.replace(/\D/g, '')}@c.us`;
+
+        const ownerMessage = `🔔 *New Meeting Confirmed!*\n\n` +
+          `• *Client*: ${contactName} (${chatId.split('@')[0]})\n` +
+          `• *Date*: ${date}\n` +
+          `• *Time*: ${time}\n` +
+          `• *Meet Link*: ${meetLink}\n` +
+          `• *Needs*: ${requirements}`;
+
+        logger.info(`Sending meeting notification to owner: ${ownerJid}`);
+        await client.sendText(ownerJid, ownerMessage);
+      } else {
+        logger.warn('OWNER_PHONE_NUMBER is not set; skipping owner notification.');
+      }
 
       // 2. Deliver Welcome Flyer Image to Client
       const flyerPath = '/app/assets/welcome_flyer.png';
@@ -218,7 +222,7 @@ export class ChatService {
           originalChatId,
           flyerPath,
           'welcome_flyer.png',
-          `Hello ${contactName}! Here is the welcome flyer for SocialBuzzz18. See you at the meeting!`
+          `Hello ${contactName}! Here is the welcome flyer for ${config.businessName}. See you at the meeting!`
         );
       } else {
         logger.warn(`Welcome flyer not found at ${flyerPath}; skipping delivery.`);
@@ -247,7 +251,7 @@ export class ChatService {
           originalChatId,
           welcomePicPath,
           'IMG_7199.PNG',
-          `Welcome ${contactName} to SocialBuzzz18!`
+          `Welcome ${contactName} to ${config.businessName}!`
         );
       } else {
         logger.warn(`Welcome picture not found at ${welcomePicPath}`);

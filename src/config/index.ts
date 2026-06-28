@@ -19,13 +19,15 @@ export const config = {
   mongoUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/whatsapp-bot',
   cerebrasApiKey: process.env.CEREBRAS_API_KEY || '',
   cerebrasModel: process.env.CEREBRAS_MODEL || 'llama-3.3-70b',
-  wppSessionName: process.env.WPP_SESSION_NAME || 'socialbuzzz18-bot',
+  wppSessionName: process.env.WPP_SESSION_NAME || 'whatsapp-ai-bot',
   logLevel: process.env.LOG_LEVEL || 'info',
   uploadDir: process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads'),
   tokenDir: process.env.TOKEN_DIR || path.join(process.cwd(), 'tokens'),
   puppeteerExecutablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '',
-  ownerPhoneNumber: process.env.OWNER_PHONE_NUMBER || '919900239806',
-  meetingLink: process.env.MEETING_LINK || 'https://meet.google.com/socialbuzzz-consult',
+  // Display name used in notifications, welcome messages, and the dashboard.
+  businessName: process.env.BUSINESS_NAME || 'our business',
+  ownerPhoneNumber: process.env.OWNER_PHONE_NUMBER || '',
+  meetingLink: process.env.MEETING_LINK || 'https://meet.google.com/your-meeting-link',
   followUpDelayMinutes: parseInt(process.env.FOLLOW_UP_DELAY_MINUTES || '1440', 10),
   crmWebhookUrl: process.env.CRM_WEBHOOK_URL || '',
 };

@@ -14,6 +14,24 @@
 
 ---
 
+## 🧒 What is this? (in plain English)
+
+Imagine you run any business and customers message you on WhatsApp all day asking the same things — *"What do you offer?"*, *"How much?"*, *"Can we talk?"*. Answering each one yourself takes hours.
+
+This project is a **robot assistant that sits on your WhatsApp and answers for you, 24/7.** Here's what it does, step by step:
+
+1. A customer sends a WhatsApp message to your number.
+2. The bot reads it and writes a smart, human-sounding reply using AI — based on facts *you* gave it about your business.
+3. If the customer sounds interested in buying, it quietly saves their details (name, what they want, contact) as a **lead** for you to follow up.
+4. If they want to talk, it can **suggest a time and book a meeting** automatically.
+5. You can see everything through a simple web dashboard.
+
+**You don't need to be a programmer to use it.** You mainly do two things: paste a free API key, and fill in a simple text file describing your business. The guide below walks you through both. If a word looks technical, don't worry — the steps are copy-paste.
+
+> **What you'll need:** a computer or a cheap online server, a WhatsApp number, and a free Cerebras account (for the AI). That's it.
+
+---
+
 ## 📸 Demo
 
 <!--
@@ -35,15 +53,15 @@ This is a **template**, not a finished product locked to one company. To rebrand
 2. Replace the `[PLACEHOLDERS]` with your business name, services, pricing approach, and tone.
 3. Save and restart — that's it. The lead-capture and meeting-booking logic keeps working automatically.
 
-Need inspiration? A complete real-world example lives in [`prompt/persona.socialbuzzz18.example.md`](prompt/persona.socialbuzzz18.example.md).
+Need inspiration? A complete filled-in example (a fictional café) lives in [`prompt/persona.example.md`](prompt/persona.example.md).
 
 ---
 
 ## ⚡ Quick start (60 seconds)
 
 ```bash
-git clone https://github.com/paradox974333/whatsappautomation-socialbuzzzz.git
-cd whatsappautomation-socialbuzzzz
+git clone https://github.com/paradox974333/whatsappautomation-easy-setup.git
+cd whatsappautomation-easy-setup
 cp .env.example .env          # add your free CEREBRAS_API_KEY (https://cloud.cerebras.ai)
 docker compose up -d --build  # starts the app + MongoDB
 ```
@@ -81,8 +99,8 @@ For the bot to reply around the clock, run it on a machine that's always on — 
 curl -fsSL https://get.docker.com | sh
 
 # 2. Get the code
-git clone https://github.com/paradox974333/whatsappautomation-socialbuzzzz.git
-cd whatsappautomation-socialbuzzzz
+git clone https://github.com/paradox974333/whatsappautomation-easy-setup.git
+cd whatsappautomation-easy-setup
 
 # 3. Configure
 cp .env.example .env
@@ -384,9 +402,9 @@ Manually broadcasts a message to a customer. This suspends AI auto-reply for thi
     ```json
     {
       "messageType": "location",
-      "latitude": "17.3297",
-      "longitude": "76.8343",
-      "locationTitle": "SocialBuzzz18 Kalaburagi office"
+      "latitude": "12.9716",
+      "longitude": "77.5946",
+      "locationTitle": "Our office"
     }
     ```
 
@@ -396,7 +414,7 @@ Manually broadcasts a message to a customer. This suspends AI auto-reply for thi
     {
       "messageType": "vcard",
       "contactPhone": "919876543211",
-      "contactName": "Sachin Kadli (SocialBuzzz18 Founder)"
+      "contactName": "Jane Doe (Founder)"
     }
     ```
 

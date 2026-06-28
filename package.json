@@ -1,7 +1,7 @@
 {
   "name": "whatsapp-ai-automation",
   "version": "1.0.0",
-  "description": "AI-powered WhatsApp Business Automation Platform for SocialBuzzz18",
+  "description": "AI-powered WhatsApp business automation: auto-reply, lead capture, and meeting booking. Reusable for any business.",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",

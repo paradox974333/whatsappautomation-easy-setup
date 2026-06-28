@@ -15,7 +15,8 @@ services:
       - MONGODB_URI=mongodb://mongodb:27017/whatsapp-bot
       - CEREBRAS_API_KEY=${CEREBRAS_API_KEY}
       - CEREBRAS_MODEL=${CEREBRAS_MODEL:-llama-3.3-70b}
-      - WPP_SESSION_NAME=${WPP_SESSION_NAME:-socialbuzzz18-bot}
+      - WPP_SESSION_NAME=${WPP_SESSION_NAME:-whatsapp-ai-bot}
+      - BUSINESS_NAME=${BUSINESS_NAME:-our business}
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - OWNER_PHONE_NUMBER=${OWNER_PHONE_NUMBER}
       - MEETING_LINK=${MEETING_LINK}
@@ -28,6 +29,8 @@ services:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
       - ./assets:/app/assets
+      # Edit prompt/persona.md on the host, then `docker compose restart` — no rebuild needed
+      - ./prompt:/app/prompt
 
   mongodb:
     image: mongo:7.0

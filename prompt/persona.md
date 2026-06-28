@@ -11,7 +11,7 @@
   any sections you don't need. The lead-capture and meeting-booking logic stays
   the same automatically — you only describe your business here.
 
-  A complete real-world example is in: prompt/persona.socialbuzzz18.example.md
+  A complete filled-in example is in: prompt/persona.example.md
   ============================================================================
 -->
 

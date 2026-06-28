@@ -6,8 +6,8 @@ Thanks for your interest in improving this project! Contributions of all sizes a
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/<your-username>/whatsappautomation-socialbuzzzz.git
-cd whatsappautomation-socialbuzzzz
+git clone https://github.com/<your-username>/whatsappautomation-easy-setup.git
+cd whatsappautomation-easy-setup
 
 # 2. Install dependencies
 npm install
