@@ -466,7 +466,11 @@ Want to use a different AI provider? The AI layer is abstracted behind [`src/ai/
 
 ## 🌐 Landing page (deploy in one click)
 
-This repo ships a polished marketing landing page in [`landing/`](landing/) (React + Vite + Tailwind). A root [`vercel.json`](vercel.json) makes it **zero-config** to deploy — import the repo on Vercel and hit Deploy, no settings to change:
+This repo ships a polished marketing landing page in [`landing/`](landing/) (React + Vite + Tailwind). To deploy on Vercel:
+
+1. Import the repo at [vercel.com/new](https://vercel.com/new).
+2. Set **Root Directory** to `landing` (Vercel auto-detects Vite — leave Build/Output as the defaults).
+3. Click **Deploy**. Every push to `main` redeploys automatically.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fparadox974333%2Fwhatsappautomation-easy-setup)
 
