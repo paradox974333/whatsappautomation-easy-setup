@@ -14,6 +14,19 @@
 
 ---
 
+## 📸 Demo
+
+<!--
+  Replace the line below with a real screenshot or GIF of the bot in action.
+  A short GIF of a live WhatsApp conversation is the #1 thing that makes people
+  try the project. Easy way to record one: ScreenToGif (Windows) or Kap (Mac).
+  Drop the file in assets/ and update the path, e.g.:
+  ![Demo](assets/demo.gif)
+-->
+> _Demo GIF coming soon — record a short clip of a real chat and drop it here as `assets/demo.gif`._
+
+---
+
 ## 🎯 Make it your own (start here)
 
 This is a **template**, not a finished product locked to one company. To rebrand the bot for your business:
